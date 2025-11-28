@@ -1,0 +1,29 @@
+# =============================================================================
+# OCPP Auto-Start Charging Automation
+# Automatically starts charging when the vehicle is plugged in
+# =============================================================================
+#
+# Copy this to your automations/ folder or add to automations.yaml
+#
+# This automation triggers when the charger connector becomes available
+# (vehicle plugged in) and automatically starts the charging session.
+# =============================================================================
+
+- id: ocpp_auto_start_charging
+  alias: "OCPP - Auto Start Charging"
+  description: "Automatically start charging when vehicle is plugged in"
+  trigger:
+    - platform: state
+      entity_id: sensor.charger_connectors
+      from: "unavailable"
+  condition:
+    - condition: state
+      entity_id: switch.charger_availability
+      state: "on"
+  action:
+    - delay:
+        seconds: 5
+    - service: switch.turn_on
+      target:
+        entity_id: switch.charger_charge_control
+  mode: single
